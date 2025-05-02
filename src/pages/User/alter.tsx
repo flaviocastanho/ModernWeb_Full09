@@ -15,16 +15,16 @@ export default function AlterUser() {
     
     let { id } = useParams();
     const [name, setName] = React.useState('')
-    const [username, setUsername] = React.useState('')
+  const [username, setUsername] = React.useState('')
+   const [roleList, setRolesList] = React.useState([]);
 
-  const rolesDisponiveis: string[] = ["admin", "editor", "viewer", "user"];
   const [rolesSelecionados, setRolesSelecionados] = useState<string[]>([]);
   
       function fetchRoles() {
         rolesService
           .getList()
           .then((list) => {
-            setRolesSelecionados(list);
+            setRolesList(list);
           })
           .catch((error) => {
             console.error("Erro ao recuperar a lista de Roles: ", error);
@@ -103,9 +103,9 @@ export default function AlterUser() {
               marginTop: "10px",
             }}
           >
-            {rolesDisponiveis.map((role) => (
-              <option key={role} value={role}>
-                {role}
+            {roleList.map((role: any) => (
+              <option key={role} value={role.name}>
+                {role.name}
               </option>
             ))}
           </select>

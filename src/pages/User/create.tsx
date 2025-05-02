@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from 'react-router-dom'
 
 import * as userService from '../../services/user.service'
+import * as rolesService from "../../services/roles.service";
 
 import MyInput from '../../components/MyInput'
 import MyButton from '../../components/MyButton'
@@ -17,17 +18,32 @@ export default function CreateUser() {
     const [username, setUsername] = React.useState('')
     const [password, setPawssord] = React.useState('')
     const [confirmPass, setConfirmPass] = React.useState('')
-  
-  const rolesDisponiveis: string[] = ["admin", "editor", "viewer", "user"];
-
-  const [rolesSelecionados, setRolesSelecionados] = useState<string[]>([]);
-
-  const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedOptions = Array.from(event.target.selectedOptions);
-    const values = selectedOptions.map((option) => option.value);
-    setRolesSelecionados(values);
-  };
-
+   const [roleList, setRolesList] = React.useState([]);
+ 
+   const [rolesSelecionados, setRolesSelecionados] = useState<string[]>([]);
+   
+       function fetchRoles() {
+         rolesService
+           .getList()
+           .then((list) => {
+             setRolesList(list);
+           })
+           .catch((error) => {
+             console.error("Erro ao recuperar a lista de Roles: ", error);
+             navigate("/login");
+           });
+       }
+   
+    React.useEffect(() => {
+      fetchRoles();
+      
+    }, []);
+   
+    const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+      const selectedOptions = Array.from(event.target.selectedOptions);
+      const values = selectedOptions.map((option) => option.value);
+      setRolesSelecionados(values);
+    };
     
     function save() {
         if (name === null || name.length < 1) {
@@ -83,9 +99,9 @@ export default function CreateUser() {
               marginTop: "10px",
             }}
           >
-            {rolesDisponiveis.map((role) => (
-              <option key={role} value={role}>
-                {role}
+            {roleList.map((role: any) => (
+              <option key={role} value={role.name}>
+                {role.name}
               </option>
             ))}
           </select>
