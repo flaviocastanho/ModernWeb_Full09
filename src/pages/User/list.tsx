@@ -74,7 +74,7 @@ export default function ListUser() {
                 <tr>
                   <td>{user.name}</td>
                   <td>{user.username}</td>
-                  <td>{user.roles.join("|")}</td>
+                  <td>{user.roles != null ? user.roles.join("|") : ""}</td>
                   <td>
                     <button onClick={() => remove(user.id)}>Remover</button>
                     <button onClick={() => altera(user.id)}>Alterar</button>
